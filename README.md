@@ -1,3 +1,5 @@
+# Polymer App Starter Kit
+=======
 # About IMES
 
 [![Build Status](https://travis-ci.org/jukbot/smart-industry.svg?branch=master)](https://travis-ci.org/jukbot/smart-industry)

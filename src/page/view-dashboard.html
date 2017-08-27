@@ -1,6 +1,5 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../view-index.html">
-<link rel="import" href="../shared-styles.html">
 <link rel="import" href="../app-language-behavior.html">
 <link rel="import" href="../dashboard/view-dashboard-overview.html">
 <link rel="import" href="../dashboard/view-dashboard-notification.html">
@@ -10,16 +9,13 @@
     <style include="shared-styles">
        :host {
         display: block;
-        padding: 10px;
         --app-grid-columns: 3;
         --app-grid-item-height: 50%;
       }
     </style>
-    <firebase-document app-name="smart-mes" id="appLanguage" path="/metadata/appLanguage" data="{{language}}"></firebase-document>
-    <app-localstorage-document key="lang" data="{{language}}"></app-localstorage-document>
     <app-header-layout fullbleed has-scrolling-region class="subheader-layout">
-      <app-header fixed shadow>
-        <app-toolbar role="toolbar" sticky class="tabs-bar">
+      <app-header slot="header" role="rowheader" fixed shadow>
+        <app-toolbar role="toolbar">
           <paper-tabs selected="{{tabs}}" attr-for-selected="name" sticky bottom-item autoselect role="navigation" noink>
             <template is="dom-repeat" items="{{submenus}}">
               <paper-tab role="tab" name$="{{item.view}}">
@@ -28,6 +24,8 @@
           </paper-tabs>
         </app-toolbar>
       </app-header>
+      <firebase-document app-name="smart-mes" id="appLanguage" path="/metadata/appLanguage" data="{{language}}"></firebase-document>
+      <app-localstorage-document key="lang" data="{{language}}"></app-localstorage-document>
       <iron-pages selected="[[tabs]]" attr-for-selected="name" role="main">
         <view-dashboard-overview name="overview"></view-dashboard-overview>
         <view-dashboard-notification name="notification"></view-dashboard-notification>

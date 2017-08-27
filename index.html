@@ -57,7 +57,7 @@
                     })
             })
         } else {
-            alert("Service Worker is not supportted by your browser. Please upgrade your browser");
+            alert("Service Worker is not support by your browser. Please upgrade your browser to use offline feature.");
         }
     </script>
     <script>
@@ -86,7 +86,6 @@
     </script>
     <!-- Load your application shell -->
     <link rel="import" href="/src/view-index.html">
-
     <!-- Add any global styles for body, document, etc. -->
     <style>
          :root {
@@ -134,10 +133,8 @@
         }
 
         .circular {
-            -webkit-animation: rotate 2s linear infinite;
             animation: rotate 2s linear infinite;
             height: 100%;
-            -webkit-transform-origin: center center;
             transform-origin: center center;
             width: 100%;
             position: absolute;
@@ -151,21 +148,18 @@
         .path {
             stroke-dasharray: 1, 200;
             stroke-dashoffset: 0;
-            -webkit-animation: dash 1s ease-in-out infinite, color 6s ease-in-out infinite;
             animation: dash 1s ease-in-out infinite, color 6s ease-in-out infinite;
             stroke-linecap: round;
         }
 
         @-webkit-keyframes rotate {
             100% {
-                -webkit-transform: rotate(360deg);
                 transform: rotate(360deg);
             }
         }
 
         @keyframes rotate {
             100% {
-                -webkit-transform: rotate(360deg);
                 transform: rotate(360deg);
             }
         }

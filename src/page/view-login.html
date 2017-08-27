@@ -15,16 +15,52 @@
     <style include="shared-styles">
        :host {
         display: block;
+        padding: 0px;
       }
 
       section {
         height: 100vh;
       }
 
+      .container {
+        display: flex;
+        justify-content: center;
+        align-content: center;
+      }
+
       .flex-layout {
         display: flex;
         flex-direction: column;
         justify-content: center;
+      }
+
+      .left-half {
+        background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("../../images/cover/welcome.jpg");
+        background-repeat: no-repeat;
+        background-position: center top;
+        background-size: cover;
+        background-color: #333333;
+        flex: 1;
+        padding: 1rem;
+        margin: 0;
+      }
+
+      .right-half {
+        background-color: #ffffff;
+        flex: 1;
+        padding: 1rem;
+      }
+
+      .main-title {
+        font-size: 3.5rem;
+        font-weight: 400;
+        text-align: center;
+      }
+
+      .main-describe {
+        font-size: 1.5rem;
+        font-weight: 300;
+        text-align: center;
       }
 
       .form-title {
@@ -42,29 +78,8 @@
         font-size: 1.25rem;
       }
 
-      .main-title {
-        font-size: 3.5rem;
-        font-weight: 400;
-        line-height: normal;
-        text-align: center;
-      }
-
       .white {
         color: #ffffff;
-      }
-
-      .main-describe {
-        font-size: 1.5rem;
-        text-align: center;
-        color: #eeeeee;
-        font-weight: 300;
-      }
-      /* Pattern styles */
-
-      .container {
-        display: flex;
-        justify-content: center;
-        align-content: center;
       }
 
       .login-forget:focus,
@@ -78,7 +93,6 @@
         color: red;
         text-decoration: underline;
       }
-
 
       .login-form,
       .reset-form,
@@ -94,27 +108,10 @@
           font-size: 1.25rem;
           color: #333333;
         }
-        ;
       }
 
       .login-remember {
         margin: 1rem 0;
-      }
-
-      .left-half {
-        background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("../../images/cover/welcome.jpg");
-        background-repeat: no-repeat;
-        background-position: center top;
-        background-size: cover;
-        background-color: #333333;
-        flex: 1;
-        padding: 1rem;
-      }
-
-      .right-half {
-        background-color: #ffffff;
-        flex: 1;
-        padding: 1rem;
       }
 
       .logo {
@@ -148,7 +145,7 @@
     <app-localstorage-document key="session" data="{{remember}}"></app-localstorage-document>
     <app-localstorage-document key="authen" data="{{authen}}"></app-localstorage-document>
     <section class="container">
-      <figure class="flex-layout left-half" style="margin: 0;">
+      <figure class="flex-layout left-half">
         <article>
           <h1 title="IMES" class="main-title white">Project IMES</h1>
           <div title="Smart Industry Helper" class="main-describe white">Your Smart Industry Helper</div>
@@ -286,10 +283,11 @@
             photoURL: null,
             phone: phone,
             organization: organize,
+            role: "admin",
             description: "No description for this user"
           })
-          .catch(err => {
-            alert("Error: " + err.message);
+          .catch(error => {
+            alert("Error: " + error.message);
           });
       },
 
@@ -301,7 +299,6 @@
               alert("Reset password has been send to your email.")
             })
             .catch((error) => {
-              console.info("%cAuthenticate Failed: " + error.code, "color: crimson;");
               alert(error.message);
             });
         } else {

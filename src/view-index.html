@@ -166,13 +166,13 @@
         border-bottom: 1px solid #eeeeee;
       }
     </style>
-    <app-location route="{{route}}" url-space-regex="^[[rootPath]]"></app-location>
+    <app-location route="{{route}}"></app-location>
     <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}"></app-route>
     <firebase-app name="smart-mes" auth-domain="smart-mes.firebaseapp.com" database-url="https://smart-mes.firebaseio.com" api-key="AIzaSyAPkuFs7jRmku7qiNGUkLk0nmtQCy0s3M0"
       storage-bucket="smart-mes.appspot.com" messaging-sender-id="253401775445"></firebase-app>
     <firebase-auth app-name="smart-mes" id="auth" user="{{user}}" online="{{online}}" signed-in="{{signedIn}}" on-error="handleError"></firebase-auth>
     <firebase-document app-name="smart-mes" id="userInformation" path="/user/[[user.uid]]" data="{{userdata}}"></firebase-document>
-    <firebase-document app-name="smart-mes" id="factoryInformation" path="/metadata" data="{{metadata}}"></firebase-document>
+    <firebase-document app-name="smart-mes" id="appInformation" path="/metadata" data="{{metadata}}"></firebase-document>
     <firebase-document app-name="smart-mes" id="appLanguage" path="/metadata/appLanguage" data="{{language}}"></firebase-document>
     <app-indexeddb-mirror key="profile" data="{{user}}" persisted-data="{{persistedProfileData}}"></app-indexeddb-mirror>
     <app-indexeddb-mirror key="metadata" data="{{metadata}}" persisted-data="{{persistedMetaData}}"></app-indexeddb-mirror>
@@ -185,18 +185,18 @@
         <h2 title="Smart Industry Helper" class="main-describe">{{localize('app-description')}}</h2>
         <nav>
           <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" fallback-selection="404" role="navigation">
-            <a name="dashboard" role="link" href="[[rootPath]]dashboard" rel="dashboard" title="Dashboard">
+            <a name="dashboard" role="link" href="/dashboard" rel="dashboard" title="Dashboard">
               <paper-icon-button icon="vaadin:dashboard"></paper-icon-button> {{localize('view-index-menu-dashboard')}}</a>
-            <a name="setup" role="link" href="[[rootPath]]setup" rel="setup" title="Setup">
+            <a name="setup" role="link" href="/setup" rel="setup" title="Setup">
               <paper-icon-button icon="vaadin:cogs"></paper-icon-button> {{localize('view-index-menu-setup')}}</a>
-            <a name="planning" role="link" href="[[rootPath]]planning" rel="plan" title="Plan">
+            <a name="planning" role="link" href="/planning" rel="plan" title="Plan">
               <paper-icon-button icon="vaadin:calendar-clock"></paper-icon-button> {{localize('view-index-menu-plan')}}</a>
-            <a name="tracking" role="link " href="[[rootPath]]tracking" rel="track" title="Track">
+            <a name="tracking" role="link " href="/tracking" rel="track" title="Track">
               <paper-icon-button icon="vaadin:timer"></paper-icon-button> {{localize('view-index-menu-track')}}</a>
-            <a name="help" role="link" href="[[rootPath]]help" rel="help" title="Help">
+            <a name="help" role="link" href="/help" rel="help" title="Help">
               <paper-icon-button icon="vaadin:question-circle"></paper-icon-button> {{localize('help')}}
             </a>
-            <a name="settings" role="link" href="[[rootPath]]settings" rel="settings" title="Settings">
+            <a name="settings" role="link" href="/settings" rel="settings" title="Settings">
               <paper-icon-button icon="vaadin:cog"></paper-icon-button> {{localize('settings')}}
             </a>
           </iron-selector>

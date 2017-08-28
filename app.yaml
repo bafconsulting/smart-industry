@@ -1,5 +1,4 @@
 application: IMES
-version: 1
 runtime: python27
 api_version: 1
 threadsafe: yes
@@ -7,6 +6,10 @@ threadsafe: yes
 handlers:
 - url: /bower_components
   static_dir: build/default/bower_components
+  secure: always
+
+- url: /data
+  static_dir: build/default/data
   secure: always
 
 - url: /images
@@ -30,4 +33,4 @@ handlers:
 - url: /.*
   static_files: build/default/index.html
   upload: build/default/index.html
-  secure: always    
+  secure: always

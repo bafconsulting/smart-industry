@@ -22,7 +22,7 @@
     <firebase-document app-name="smart-mes" id="appLanguage" path="/metadata/appLanguage" data="{{language}}"></firebase-document>
     <app-localstorage-document key="lang" data="{{language}}"></app-localstorage-document>
     <app-header-layout fullbleed has-scrolling-region class="subheader-layout">
-      <app-header style="margin-top: 64px;" fixed shadow>
+      <app-header style="margin-top: 64px;" slot="header" role="rowheader" fixed shadow>
         <app-toolbar role="toolbar" sticky>
           <paper-tabs id="setupTabs" selected="{{tabs}}" attr-for-selected="id" sticky bottom-item autoselect role="navigation" noink>
             <template is="dom-repeat" items="{{submenus}}">
@@ -32,7 +32,7 @@
           </paper-tabs>
         </app-toolbar>
       </app-header>
-      <iron-pages selected="[[tabs]]" attr-for-selected="name" role="main">
+      <iron-pages style="margin-top: 64px;" selected="[[tabs]]" attr-for-selected="name" role="main">
         <view-setup-factory name="factory"></view-setup-factory>
         <view-setup-machine name="machine"></view-setup-machine>
         <view-setup-station name="station"></view-setup-station>

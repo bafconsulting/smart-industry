@@ -108,7 +108,7 @@
         width: 150px;
       }
 
-      .priority-dialog {
+      .reschedule-dialog {
         width: 30%;
       }
 
@@ -121,13 +121,13 @@
         padding: 10px;
       }
 
-      .priority-dialog-title {
+      .reschedule-dialog-title {
         font-size: 1.25rem;
         line-height: 1.5rem;
         color: red;
       }
 
-      .priority-dialog-text {
+      .reschedule-dialog-text {
         line-height: 1.65rem;
       }
 
@@ -138,6 +138,7 @@
       .late {
         color: red;
       }
+
       #priorityTypeSelector {
         margin-top: 20px;
       }
@@ -158,27 +159,26 @@
     </style>
 
     <firebase-query app-name="smart-mes" id="customerQuery" path="/customer" order-by-child="fname" data="{{customerData}}"></firebase-query>
-    <firebase-query app-name="smart-mes" id="orderQuery" path="/order" order-by-child="order_delivery" order-by-value="true" data="{{orderData}}"></firebase-query>
+    <firebase-query app-name="smart-mes" id="orderQuery" path="/order" order-by-child="order_delivery" data="{{orderData}}"></firebase-query>
     <firebase-query app-name="smart-mes" id="productQuery" path="/product" order-by-child="name" data="{{productData}}"></firebase-query>
     <firebase-query app-name="smart-mes" id="stationQuery" path="/station" order-by-child="name" data="{{stationData}}"></firebase-query>
     <firebase-query app-name="smart-mes" id="machineQuery" path="/machine" order-by-child="number" data="{{machineData}}"></firebase-query>
-
+    <firebase-document app-name="smart-mes" id="orderDataDoc" path="/order" data="{{orderDataDoc}}"></firebase-document>
     <firebase-document app-name="smart-mes" id="factoryStandard" path="/factory/standard" data="{{factoryStandard}}"></firebase-document>
     <firebase-document app-name="smart-mes" id="factoryPerformance" path="/factory/performance" data="{{factoryPerformance}}"></firebase-document>
     <firebase-document app-name="smart-mes" id="factoryOperation" path="/factory/operation" data="{{factoryOperation}}"></firebase-document>
 
     <app-indexeddb-mirror key="orderDataCache" data="{{orderData}}" persisted-data="{{persistedOrderData}}"></app-indexeddb-mirror>
-        
+
     <ul class="app-grid">
       <li>
         <div class="card">
           <h1>Orders Table</h1>
           <!-- <h3>Current Jobs Priority: <span class="priorityType">[[factoryStandard.priority]]</span></h3> -->
-          <h2>Next Reschedule Date: [[getNextInterval(factoryStandard.start_interval, factoryStandard.interval)]]</h2>
-          <h2>Reschedule Interval: [[factoryStandard.interval]] days</h2>
+          <p>Next Reschedule Date: [[getNextInterval(factoryStandard.start_interval, factoryStandard.interval)]]</p>
           <div>
-            <paper-button raised class="chilli priority-btn" on-tap="reschedule" style="margin-bottom: 10px;">Reschedule</paper-button>
-            <paper-button raised class="dark priority-btn" on-tap="togglePriority" style="margin-bottom: 10px;">Clear Order</paper-button>
+            <paper-button raised class="chilli priority-btn" on-tap="toggleRescedule" style="margin-bottom: 10px;">Reschedule</paper-button>
+            <paper-button raised class="dark priority-btn" on-tap="clearOrder" style="margin-bottom: 10px;">Clear Order</paper-button>
           </div>
           <vaadin-grid id="orderTable" aria-label="Orders Table" items="[[persistedOrderData]]">
 
@@ -280,7 +280,7 @@
                 <div class="cell right last">Status</div>
               </template>
               <template>
-                <div class="cell right last status [[getOrderStatus(item.order_delivery)]]">[[getOrderStatus(item.order_delivery)]]</div>
+                <div class="cell right last status late">[[getOrderStatus(item.order_delivery)]]</div>
               </template>
             </vaadin-grid-column>
 
@@ -308,11 +308,12 @@
           </vaadin-grid>
         </div>
       </li>
+
       <li>
         <div class="card">
-         <vaadin-combo-box label="Order no." name="order" items="[[orderData]]" id="orderSelector" item-label-path="order_no" item-value-path="order_no"
-                selected-item='{{selectOrder}}' required always-float-label></vaadin-combo-box>
-          <h1>Order [[selectOrder.order_no]] Schedule</h1>
+          <h1>Order No. [[selectOrder.order_no]] Schedule</h1>
+          <vaadin-combo-box label="Order no." name="order" items="[[orderData]]" id="orderSelector" item-label-path="order_no" item-value-path="order_no"
+            selected-item='{{selectOrder}}' required always-float-label></vaadin-combo-box>
           <vaadin-grid id="orderTable" aria-label="Station Table" items="[[selectOrder]]">
             <vaadin-grid-column width="4em" flex="0">
               <template class="header">
@@ -401,14 +402,17 @@
           </vaadin-grid>
         </div>
       </li>
+
       <li>
         <div class="card">
-          <h1>Daily Jobs Production Scheduling of [[today]]</h1>[[test]]
+          <h1>Daily Jobs Production Scheduling of [[today]]</h1>
           <h2>Operation Condition: [[getOpTime(factoryOperation.op_end,factoryOperation.op_start)]] hrs.</h2>
           <vaadin-combo-box style="width: 300px;" label="Select order no" name="order" items="[[orderData]]" id="orderSelector" item-label-path="order_no"
             item-value-path="order_no" selected-item='{{o}}' always-float-label></vaadin-combo-box>
           <vaadin-date-picker style="width: 300px;" name="workdate" min="2017-01-01" value="[[todayDate]]" class="date-selector" id="workdateSelector"
             always-float-label></vaadin-date-picker>
+          CHART IS BUG IN WEB COMPONENT V1 (IN FIXING)
+          <!-- 
           <vaadin-columnrange-chart id="column-range-resource-usage">
             <chart inverted="true"></chart>
             <chart-title>Job Scheduling</chart-title>
@@ -427,7 +431,7 @@
               </columnrange>
             </plot-options>
             <data-series name="Order 1" color="#E91E63" data="[[scheduleData]]"></data-series>
-          </vaadin-columnrange-chart>
+          </vaadin-columnrange-chart> -->
           <div class="frame">
             <h2>Average Completion Time: [[getOpTime(factoryOperation.op_end, factoryOperation.op_start)]]</h2>
             <h2>% Utilization:</h2>
@@ -436,21 +440,18 @@
           </div>
         </div>
       </li>
+
     </ul>
 
-    <paper-dialog class="priority-dialog" id="changePriorityDialog">
-      <h3 class="priority-dialog-title">
-        <iron-icon icon="vaadin:warning"></iron-icon> Warning: Schedule change
+    <paper-dialog class="reschedule-dialog" id="rescheduleDialog">
+      <h3 class="reschedule-dialog-title">
+        <iron-icon icon="vaadin:warning"></iron-icon> Warning: Re-schedule change
         <h3>
-          <p class="priority-dialog-text">Changing priority will affect other orders scheduling. This cannot change the jobs scheduling that are currently
-            running.</p>
-          <paper-radio-group id="priorityTypeSelector" selected="[[factoryStandard.priority]]">
-            <paper-radio-button name="EDD" value="EDD">EDD</paper-radio-button>
-            <paper-radio-button name="SPT" value="SPT">SPT</paper-radio-button>
-          </paper-radio-group>
+          <p class="reschedule-dialog-text">Re-schedule will affect other orders scheduling. This cannot change the jobs scheduling that were scheduled today.
+          </p>
           <div class="buttons">
-            <paper-button dialog-dismiss>Dismiss</paper-button>
-            <paper-button class="bold" on-tap="savePriority" autofocus dialog-confirm>Change</paper-button>
+            <paper-button dialog-dismiss>Cancel</paper-button>
+            <paper-button class="bold" on-tap="rescheduleTable" autofocus dialog-confirm>Reschedule</paper-button>
           </div>
     </paper-dialog>
   </template>
@@ -459,27 +460,14 @@
       is: 'view-plan-scheduling',
       test: String,
       properties: {
-        productData: {
-          type: Object
-        },
-        productSize: {
-          type: Object
-        },
-        orderData: {
-          type: Object
-        },
-        stationData: {
-          type: Object
-        },
-        machineData: {
-          type: Object
-        },
-        factoryStandard: {
-          type: Object
-        },
-        selectAll: {
-          type: Object
-        },
+        productData: Object,
+        productSize: Object,
+        orderData: Object,
+        orderDataDoc: Object,
+        stationData: Object,
+        machineData: Object,
+        factoryStandard: Object,
+        selectAll: Object,
         scheduleData: {
           type: Array,
           value: [
@@ -503,6 +491,12 @@
                 number: 2
               }
             ]
+          }
+        },
+        currentTimestamp: {
+          type: Number,
+          value: function () {
+            return Math.floor(Date.now() / 1000);
           }
         },
 
@@ -534,22 +528,20 @@
         },
       },
 
-      reschedule() {
-        if (confirm("!! Are you sure do you want to force reschedule ? !!") == true) {
-          alert('Reschedule Successful');
-          this.rescheduleOrder();
+      clearOrder() {
+        if (confirm("!! Are you sure do you want to clear all orders ? !!") == true) {
+          alert('Clear Orders Successful');
+          this.$.orderQuery.ref.remove();
         }
       },
 
       setNextInterval() {
-        let current = Math.floor(Date.now() / 1000);
-        let nextInterval = current +  this.factoryStandard.interval;
+        let nextInterval = this.currentTimestamp + this.factoryStandard.interval;
         this.set('factoryStandard.start_interval', nextInterval);
       },
 
       getOrderStatus(order_delivery) {
-        let current_timestamp = Math.floor(Date.now() / 1000);
-        if (order_delivery - current_timestamp < 0) {
+        if (order_delivery - this.currentTimestamp < 0) {
           return "late";
         } else {
           return "waiting";
@@ -557,26 +549,23 @@
       },
 
       getOrderPriority(order_delivery) {
-        let samedate;
-        return "EDD";
+        console.log(order_delivery);
+        let compare = Math.abs(this.currentTimestamp - order_delivery);
+        if (compare < 86400) {
+          priority = "SPT";
+        } else {
+          priority = "EDD";
+        }
         // for (let i in  orderData) {
-        //     if (Math.abs(order_delivery - this.orderData[i + 1].order_delivery) < 86400) {
-        //       return "SPT";
+        //     if (compare < 86400) {
+        //       priority = "SPT";
         //     } else {
-        //       return "EDD";
+        //       priority = "EDD";
         //     }
         // }
+        return priority;
       },
 
-      getSameDeliveryDate(order) {
-        let count = 0;
-        for(let i in order) {
-          if(Math.abs(this.orderData[i].order_delivery) - this.orderData[i + 1].order_delivery < 86400) {
-            count++;
-          } else {}
-        }
-        return count;
-      },
       minutesToStr(minute) {
         let sign = '';
         if (minute < 0) {
@@ -703,10 +692,10 @@
         if (!part || !amount) return 0;
         let cycleTime;
         let setupTime;
-          for(let i in part) {
-              cycleTime += this.getSumCycleTime(part[i].cycle, amount);
-              setupTime += this.getSumSetupTime(part[i].setup);
-           }
+        for (let i in part) {
+          cycleTime += this.getSumCycleTime(part[i].cycle, amount);
+          setupTime += this.getSumSetupTime(part[i].setup);
+        }
 
         let workload = Math.ceil((cycleTime) + setupTime);
         //console.log("WL " + workload);
@@ -736,8 +725,8 @@
         return setupTime;
       },
 
-      togglePriority() {
-        this.$.changePriorityDialog.open();
+      toggleRescedule() {
+        this.$.rescheduleDialog.open();
       },
 
       orderType(type) {
@@ -746,10 +735,6 @@
         } else if (type === "EDD") {
           return "order_delivery"
         }
-      },
-      savePriority() {
-        let value = this.$.priorityTypeSelector.selected;
-        this.set('factoryStandard.priority', value);
       },
 
       test() {

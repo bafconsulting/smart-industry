@@ -13,7 +13,7 @@
       }
     </style>
     <app-header-layout fullbleed has-scrolling-region class="subheader-layout">
-      <app-header style="margin-top: 64px;" fixed shadow>
+      <app-header style="margin-top: 64px;" slot="header" role="rowheader" fixed shadow>
         <app-toolbar role="toolbar" sticky class="tabs-bar">
           <paper-tabs selected="{{tabs}}" attr-for-selected="id" sticky bottom-item autoselect role="navigation" noink>
             <template is="dom-repeat" items="{{submenus}}">
@@ -23,7 +23,7 @@
           </paper-tabs>
         </app-toolbar>
       </app-header>
-      <iron-pages selected="[[tabs]]" attr-for-selected="name" role="main">
+      <iron-pages style="margin-top: 64px;" selected="[[tabs]]" attr-for-selected="name" role="main">
         <view-track-production name="production"></view-track-production>
         <view-track-machine name="machine"></view-track-machine>
         <view-track-energy name="energy"></view-track-energy>

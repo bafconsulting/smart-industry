@@ -83,6 +83,10 @@
         display: none !important;
       }
 
+      app-drawer-layout:not([narrow]) [drawer-toggle] {
+        display: none !important;
+      }
+
       .main-title {
         font-size: 3.50rem;
         line-height: normal;
@@ -162,7 +166,7 @@
         border-bottom: 1px solid #eeeeee;
       }
     </style>
-    <app-location route="{{route}}"></app-location>
+    <app-location route="{{route}}" url-space-regex="^[[rootPath]]"></app-location>
     <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}"></app-route>
     <firebase-app name="smart-mes" auth-domain="smart-mes.firebaseapp.com" database-url="https://smart-mes.firebaseio.com" api-key="AIzaSyAPkuFs7jRmku7qiNGUkLk0nmtQCy0s3M0"
       storage-bucket="smart-mes.appspot.com" messaging-sender-id="253401775445"></firebase-app>
@@ -174,27 +178,25 @@
     <app-indexeddb-mirror key="metadata" data="{{metadata}}" persisted-data="{{persistedMetaData}}"></app-indexeddb-mirror>
     <app-localstorage-document key="lang" data="{{language}}"></app-localstorage-document>
     <app-localstorage-document key="authen" data="{{authen}}"></app-localstorage-document>
-    <app-drawer-layout id="layout" fullbleed>
-      <app-drawer hidden$="[[!signedIn]]" opened="{{drawerOpened}}" id="drawer" role="menu" slot="drawer" tabindex="0" no-focus-trap="true"
-        swipe-open>
+    <app-drawer-layout id="layout" fullbleed narrow="{{narrow}}">
+      <app-drawer hidden$="[[!signedIn]]" id="drawer" slot="drawer" role="menu" swipe-open="[[narrow]]">
         <img class="logo" role="img" src="../images/logo/industrial.svg" title="Logo" alt="application logo">
         <h1 title="IMES" class="main-title">IMES</h1>
         <h2 title="Smart Industry Helper" class="main-describe">{{localize('app-description')}}</h2>
         <nav>
-          <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" fallback-selection="404" on-iron-activate="_drawerSelected"
-            role="navigation">
-            <a name="dashboard" role="link" href="/dashboard" rel="dashboard" title="Dashboard">
+          <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" fallback-selection="404" role="navigation">
+            <a name="dashboard" role="link" href="[[rootPath]]dashboard" rel="dashboard" title="Dashboard">
               <paper-icon-button icon="vaadin:dashboard"></paper-icon-button> {{localize('view-index-menu-dashboard')}}</a>
-            <a name="setup" role="link" href="/setup" rel="setup" title="Setup">
+            <a name="setup" role="link" href="[[rootPath]]setup" rel="setup" title="Setup">
               <paper-icon-button icon="vaadin:cogs"></paper-icon-button> {{localize('view-index-menu-setup')}}</a>
-            <a name="planning" role="link" href="/planning" rel="plan" title="Plan">
+            <a name="planning" role="link" href="[[rootPath]]planning" rel="plan" title="Plan">
               <paper-icon-button icon="vaadin:calendar-clock"></paper-icon-button> {{localize('view-index-menu-plan')}}</a>
-            <a name="tracking" role="link " href="/tracking" rel="track" title="Track">
+            <a name="tracking" role="link " href="[[rootPath]]tracking" rel="track" title="Track">
               <paper-icon-button icon="vaadin:timer"></paper-icon-button> {{localize('view-index-menu-track')}}</a>
-            <a name="help" role="link" href="/help" rel="help" title="Help">
+            <a name="help" role="link" href="[[rootPath]]help" rel="help" title="Help">
               <paper-icon-button icon="vaadin:question-circle"></paper-icon-button> {{localize('help')}}
             </a>
-            <a name="settings" role="link" href="/settings" rel="settings" title="Settings">
+            <a name="settings" role="link" href="[[rootPath]]settings" rel="settings" title="Settings">
               <paper-icon-button icon="vaadin:cog"></paper-icon-button> {{localize('settings')}}
             </a>
           </iron-selector>
@@ -215,25 +217,26 @@
           </div>
         </dom-if>
       </app-drawer>
-      <app-header-layout fullbleed has-scrolling-region>
+      <app-header-layout has-scrolling-region>
         <app-header hidden$="[[!signedIn]]" id="header" slot="header" condenses fixed>
           <app-toolbar role="toolbar">
-            <paper-icon-button icon="vaadin:menu" on-tap="_toggleDrawer" aria-label="sidebar menu" drawer-toggle></paper-icon-button>
+            <paper-icon-button icon="vaadin:menu" drawer-toggle></paper-icon-button>
             <h2 class="page-title" main-title>{{localize(page)}}</h2>
             <div hidden$="[[!user]]">
-              <h2 class="display-name" hidden$="{{!wideLayout}}">Hi! [[user.displayName]]</h2>
+              <h2 class="display-name" hidden$="{{!wideLayout}}">
+                [[user.displayName]]</h2>
             </div>
           </app-toolbar>
         </app-header>
-        <iron-pages selected="[[page]]" attr-for-selected="name" fallback-selection="404" selected-attribute="visible" role="main">
-          <view-dashboard name="dashboard" route="{{subroute}}" hidden$="[[!signedIn]]"></view-dashboard>
-          <view-setup name="setup" route="{{subroute}}" hidden$="[[!signedIn]]"></view-setup>
-          <view-planning name="planning" route="{{subroute}}" hidden$="[[!signedIn]]"></view-planning>
-          <view-tracking name="tracking" route="{{subroute}}" hidden$="[[!signedIn]]"></view-tracking>
-          <view-help name="help" route="{{subroute}}" hidden$="[[!signedIn]]"></view-help>
-          <view-settings name="settings" route="{{subroute}}" hidden$="[[!signedIn]]"></view-settings>
-          <view-404 name="404" route="{{subroute}}"></view-404>
-          <view-login name="login" route="{{subroute}}" hidden$="[[signedIn]]"></view-login>
+        <iron-pages selected="[[page]]" attr-for-selected="name" fallback-selection="404" role="main">
+          <view-dashboard name="dashboard" hidden$="[[!signedIn]]"></view-dashboard>
+          <view-setup name="setup" hidden$="[[!signedIn]]"></view-setup>
+          <view-planning name="planning" hidden$="[[!signedIn]]"></view-planning>
+          <view-tracking name="tracking" hidden$="[[!signedIn]]"></view-tracking>
+          <view-help name="help" hidden$="[[!signedIn]]"></view-help>
+          <view-settings name="settings" hidden$="[[!signedIn]]"></view-settings>
+          <view-404 name="404"></view-404>
+          <view-login name="login" hidden$="[[signedIn]]"></view-login>
         </iron-pages>
       </app-header-layout>
     </app-drawer-layout>
@@ -248,11 +251,6 @@
           type: String,
           reflectToAttribute: true,
           observer: '_pageChanged',
-        },
-        wideLayout: {
-          type: Boolean,
-          value: false,
-          observer: '_layoutChanged',
         },
         online: {
           type: Boolean,
@@ -269,11 +267,12 @@
         alertText: String,
         route: Object,
         subroute: Object,
+        // Polymer.Element#rootPath
+        rootPath: String,
         routeData: Object,
         user: Object,
         metadata: Object,
         notification: Boolean,
-        drawerOpened: Boolean,
       },
 
       observers: ['_routePageChanged(routeData.page)'],
@@ -294,8 +293,6 @@
       },
 
       ready() {
-        // Custom elements polyfill safe way to indicate an element has been upgraded.
-        this.removeAttribute('unresolved');
         // If the path is blank, redirect to login
         if (this.route.path === undefined) {
           this.page = 'dashboard';
@@ -305,6 +302,7 @@
       _authenChanged(authen) {
         if (!authen) {
           this.$.layout.resetLayout();
+          this.$.drawer.resetLayout();
           this.page = 'login;';
         }
       },
@@ -313,10 +311,8 @@
         this.$.drawer.hidden = !signedIn;
         this.$.header.hidden = !signedIn;
         if (!signedIn) {
-          this.$.layout.resetLayout();
           this.page = 'login';
         } else {
-          this.$.layout.resetLayout();
           this.page = 'dashboard';
         }
       },
@@ -355,32 +351,23 @@
           this.$.toastAlert.open();
         } else {
           this.$.auth.refreshNetworkStatus();
-          // this.$.messaging.refreshNetworkStatus();
           this.$.appLanguage.refreshNetworkStatus();
           this.$.factoryInformation.refreshNetworkStatus();
         }
       },
 
-      _layoutChanged(wide) {
-        if (wide && this.$.drawer.opened) this.$.drawer.opened = false;
-        this.$.layout.resetLayout();
-      },
-
-      _drawerSelected() {
-        if (!this.$.drawer.persistent) this.$.drawer.close();
-      },
-
       _routePageChanged(page) {
         this.page = page || 'dashboard';
+
+        // Close a non-persistent drawer when the page & route are changed.
+        if (!this.$.drawer.persistent) {
+          this.$.drawer.close();
+        }
       },
 
       _pageChanged(page) {
         let resolvedPageUrl = this.resolveUrl('page/view-' + page + '.html');
         this.importHref(resolvedPageUrl, null, this._showPage404.bind(this), true);
-      },
-
-      _toggleDrawer() {
-        this.drawerOpened = !this.drawerOpened;
       },
 
       _showPage404() {
@@ -395,7 +382,6 @@
             this.authen = false;
             // redirect to login page
             this.page = 'login';
-            console.info('Logout successful');
           })
           .catch((error) => {
             console.info('%cAuthenticate Failed: ' + error.code, 'color: crimson;');

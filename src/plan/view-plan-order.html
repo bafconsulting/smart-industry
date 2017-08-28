@@ -112,6 +112,7 @@
           <p>Delivery Date: [[delivery]]</p>
           <p>Raw Material Used: [[selectProduct.raw]]</p>
           <p>Operation hours: [[getOpTime(factoryOperation.op_end, factoryOperation.op_start)]] Hrs.</p>
+          <p>Cost: [[getProductCost(selectProduct.cost,amount)]]</p>
         </div>
       </li>
     </ul>
@@ -132,8 +133,8 @@
           <h2>Product Part [[part.name]]</h2>
           <p>Part SKU: [[part.sku]]</p>
           <p>Part Process Sequence: [[getProductProcess(part.process)]]</p>
-          <p>Total Setup Time : [[getSumSetupTime(part.setup)]] minutes</p>
-          <p>Total Process Time : [[getSumCycleTime(part.cycle)]] minutes</p>
+          <p>Setup Time : [[getSumSetupTime(part.setup)]] minutes</p>
+          <p>Cycle Time : [[getSumCycleTime(part.cycle)]] minutes</p>
         </div>
       </template>
     </div>
@@ -264,11 +265,22 @@
 
       getOpTime(end, start) {
         if (!end || !start) return 0;
-        let endtime = end.replace(/\:/g, '.')
-        let starttime = start.replace(/\:/g, '.')
+        let endtime = end.replace(/\:/g, '.');
+        let starttime = start.replace(/\:/g, '.');
         let optime = endtime - starttime;
         this.operationTime = optime; // set to global variable
         return optime;
+      },
+
+      getProductCost(cost, amount) {
+        if (!cost || !amount) return 0;
+        let actual_amount = this.getActualQuantity(amount);
+        let total_cost = (cost * actual_amount);
+        return total_cost;
+      },
+
+      getProductProcess(process) {
+        return process.split(',').join(' → ');
       },
 
       setProductSKU(sku) {
@@ -369,10 +381,6 @@
       _saveOrder: function () {
         alert('Saved order to order save list successful');
         clearField();
-      },
-
-      getProductProcess: function (process) {
-        return process.split(',').join(' → ');
       },
 
       uploadFile: function () {
